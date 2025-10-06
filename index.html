@@ -216,10 +216,8 @@
           const overlay = document.getElementById('introOverlay');
           overlay.style.display = 'flex';
 
-          // Các icon float xuất hiện trước
-          setTimeout(() => {
-            startTyping();
-          }, 1500); // delay 1.5s rồi mới đánh chữ
+          // Icon float ngay lập tức
+          startTyping(); // typing sau delay 2s bên trong
         }, 800);
       } else {
         pwInput.classList.add('wrong');
@@ -258,6 +256,7 @@
     }
 
     function startTyping() {
+      // delay 2 giây rồi mới bắt đầu đánh máy
       setTimeout(() => {
         typeText(text1, line1, () => {
           typeText(text2, line2, () => {

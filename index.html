@@ -79,6 +79,12 @@
       cursor: pointer;
       flex-direction: column;
       overflow: hidden;
+      transition: opacity 1s ease;
+    }
+
+    .intro-overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .intro-overlay span {
@@ -114,6 +120,7 @@
       font-size: 1.5em;
       opacity: 0.8;
       animation: floatIcons 10s linear infinite;
+      z-index: 1;
     }
 
     @keyframes floatIcons {
@@ -124,35 +131,17 @@
     }
 
     /* ============ MAIN PAGE ============ */
+    main {
+      display: none;
+      min-height: 100vh;
+      padding-top: 150px;
+      background: radial-gradient(circle at top right, #1a1333, #0b0b1d);
+    }
+
     h1 {
-      margin-top: 150px;
+      margin-top: 200px;
       color: #f2eee7;
       font-size: 2.2em;
-    }
-
-    .tab {
-      display: inline-block;
-      background-color: #e5e1d8;
-      color: #3b2f2f;
-      padding: 10px 20px;
-      margin: 10px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .tab:hover { background-color: #d8d4c7; }
-
-    .letter {
-      display: none;
-      margin: 20px auto 100px auto;
-      max-width: 500px;
-      background-color: #f7f4ee;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: left;
-      color: #3b2f2f;
     }
 
     /* Stars */
@@ -185,20 +174,11 @@
     <small id="clickText">(Click anywhere to continue)</small>
   </div>
 
-  <!-- FLOATING ICONS -->
-  <script>
-    const overlay = document.getElementById('introOverlay');
-    const icons = ['💖','✨','🌙','💫','🌸','💌'];
-    for(let i=0;i<20;i++){
-      const icon = document.createElement('div');
-      icon.className = 'floating-icon';
-      icon.textContent = icons[Math.floor(Math.random()*icons.length)];
-      icon.style.left = Math.random()*100 + 'vw';
-      icon.style.animationDuration = (8 + Math.random()*5) + 's';
-      icon.style.fontSize = (1 + Math.random()*1.5) + 'em';
-      overlay.appendChild(icon);
-    }
-  </script>
+  <!-- MAIN PAGE -->
+  <main id="mainPage">
+    <h1>Happy 1 Year Anniversary ❤️</h1>
+    <p>Welcome to our little universe of love ✨</p>
+  </main>
 
   <!-- AUDIO -->
   <audio id="bg-music" loop>
@@ -206,6 +186,7 @@
   </audio>
 
   <script>
+    // ========== PASSWORD CHECK ==========
     function checkPassword() {
       const pwInput = document.getElementById('pwInput');
       if (pwInput.value === '1510') {
@@ -213,11 +194,7 @@
         gate.style.opacity = '0';
         setTimeout(() => {
           gate.style.display = 'none';
-          const overlay = document.getElementById('introOverlay');
-          overlay.style.display = 'flex';
-
-          // Icon float ngay lập tức
-          startTyping(); // typing sau delay 2s bên trong
+          showOverlay();
         }, 800);
       } else {
         pwInput.classList.add('wrong');
@@ -229,19 +206,38 @@
       }
     }
 
-    function closeIntro() {
-      document.getElementById('introOverlay').style.display = 'none';
-      const music = document.getElementById('bg-music');
-      music.volume = 0.7;
-      music.play().catch(err => console.log("Autoplay bị chặn:", err));
-    }
-
-    // Typing effect
+    // ========== OVERLAY ==========
+    const overlay = document.getElementById('introOverlay');
     const text1 = "🎉❤️Happy Anniversary❤️🎉";
     const text2 = "October 2024 - October 2025";
     const line1 = document.getElementById("line1");
     const line2 = document.getElementById("line2");
     const clickText = document.getElementById("clickText");
+
+    function showOverlay() {
+      overlay.style.display = 'flex';
+
+      // Icon float ngay lập tức
+      const icons = ['💖','✨','🌙','💫','🌸','💌'];
+      for(let i=0;i<25;i++){
+        const icon = document.createElement('div');
+        icon.className = 'floating-icon';
+        icon.textContent = icons[Math.floor(Math.random()*icons.length)];
+        icon.style.left = Math.random()*100 + 'vw';
+        icon.style.animationDuration = (8 + Math.random()*5) + 's';
+        icon.style.fontSize = (1 + Math.random()*1.5) + 'em';
+        overlay.appendChild(icon);
+      }
+
+      // Delay 2s rồi mới type chữ
+      setTimeout(() => {
+        typeText(text1, line1, () => {
+          typeText(text2, line2, () => {
+            clickText.classList.add("visible");
+          });
+        });
+      }, 2000);
+    }
 
     function typeText(text, el, callback) {
       let i = 0;
@@ -255,15 +251,15 @@
       typing();
     }
 
-    function startTyping() {
-      // delay 2 giây rồi mới bắt đầu đánh máy
+    function closeIntro() {
+      overlay.classList.add('fade-out');
+      const music = document.getElementById('bg-music');
+      music.volume = 0.7;
+      music.play().catch(err => console.log("Autoplay bị chặn:", err));
       setTimeout(() => {
-        typeText(text1, line1, () => {
-          typeText(text2, line2, () => {
-            clickText.classList.add("visible");
-          });
-        });
-      }, 2000);
+        overlay.style.display = 'none';
+        document.getElementById('mainPage').style.display = 'block';
+      }, 1000);
     }
   </script>
 </body>

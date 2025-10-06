@@ -5,134 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>1 Year Anniversary</title>
 <style>
-  body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    color: #f2eee7;
-    overflow-x: hidden;
-    background-color: #590818; /* overlay color đầu tiên */
-    transition: background-color 1.5s ease; /* đổi sang nền đêm sau overlay */
-  }
+  /* ====== GLOBAL ====== */
+  body, html { margin:0; padding:0; font-family:Arial,sans-serif; overflow-x:hidden; color:#f2eee7; }
+  body { background-color:#590818; }
 
-  .main-content {
-    visibility: hidden;
-  }
+  /* ===== PASSWORD GATE ===== */
+  .password-gate { position:fixed;top:0;left:0;width:100%;height:100%;background:#590818;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:10000;}
+  .password-gate h2 { margin-bottom:20px; font-size:1.5em; color:#f2eee7; }
+  .password-gate input { padding:10px 20px; border-radius:20px; border:none; text-align:center; font-size:1em; outline:none; background:#f2eee7; color:#3b2f2f; transition:all 0.3s; }
+  .password-gate input.wrong { background:#ffb3b3; color:#590818; }
+  .password-gate button { margin-top:15px; padding:10px 25px; border-radius:20px; border:none; background:#3b2f2f; color:#f2eee7; cursor:pointer; transition:0.3s; }
+  .password-gate button:hover { background:#7a1b27; }
 
-  /* PASSWORD */
-  .password-gate {
-    position: fixed; inset: 0;
-    background-color: #1a0d0d;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    z-index: 10000;
-    transition: opacity 1s ease;
-  }
-  .password-gate input, .password-gate button {
-    border: none; border-radius: 20px; outline: none;
-  }
-  .password-gate h2 { color: #f2eee7; margin-bottom: 20px; }
-  .password-gate input {
-    padding: 10px 20px; font-size: 1em;
-    text-align: center; background-color: #f2eee7; color: #3b2f2f;
-  }
-  .password-gate input.wrong { background-color: #ffb3b3; color: #590818; }
-  .password-gate button {
-    margin-top: 15px; padding: 10px 25px;
-    background-color: #590818; color: #f2eee7; cursor: pointer;
-  }
-  .password-gate button:hover { background-color: #7a1b27; }
+  /* ===== OVERLAY ===== */
+  .intro-overlay { position:fixed;top:0;left:0;width:100%;height:100%;background:#590818; display:flex;flex-direction:column;justify-content:center;align-items:center; font-size:1.5em;font-weight:bold; z-index:9999; overflow:hidden; opacity:1; transition:opacity 1s ease; }
+  .intro-overlay span { font-size:2em; margin-bottom:20px; position:relative; z-index:2; white-space:pre; }
+  .intro-overlay .line2 { font-size:1.5em; margin-top:0; z-index:2; }
+  .intro-overlay small { font-size:0.6em; font-weight:300; opacity:0; margin-top:25px; transition:opacity 1.5s; z-index:2; }
+  .intro-overlay small.visible { opacity:0.8; }
 
-  /* OVERLAY */
-  .intro-overlay {
-    position: fixed; inset: 0;
-    display: none; align-items: center; justify-content: center;
-    flex-direction: column; background-color: #590818;
-    color: #f2eee7; z-index: 9999; overflow: hidden;
-    transition: opacity 1s ease;
-  }
-  .intro-overlay.fade-out { opacity: 0; pointer-events: none; }
+  /* FLOATING ICONS */
+  .floating-icons { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; overflow:hidden; }
+  .floating-icon { position:absolute; font-size:2em; opacity:0.6; animation:floatUp 6s linear infinite; }
+  @keyframes floatUp { 0%{transform:translateY(0) scale(1);opacity:0.8;} 80%{opacity:1;} 100%{transform:translateY(-120vh) scale(0.9);opacity:0;} }
 
-  .floating-icons { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
-  .floating-icon {
-    position: absolute; font-size: 2em; opacity: 0.6;
-    animation: floatUp 6s linear infinite;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0); opacity: 0.8; }
-    80% { opacity: 1; }
-    100% { transform: translateY(-120vh); opacity: 0; }
-  }
-
-  .intro-overlay span, .intro-overlay small { position: relative; z-index: 2; }
-  .intro-overlay span { font-size: 2em; margin-bottom: 20px; white-space: pre; }
-  .intro-overlay .line2 { font-size: 1.5em; }
-  .intro-overlay small {
-    font-size: 0.6em; font-weight: 300;
-    opacity: 0; margin-top: 25px; transition: opacity 1.5s;
-  }
-  .intro-overlay small.visible { opacity: 0.8; }
+  /* ===== MAIN PAGE ===== */
+  main, .content { display:none; min-height:100vh; background: radial-gradient(circle at 50% 80%, #0b0b1a 0%, #01010a 100%); position:relative; }
 
   /* SKY */
-  .sky {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at top right, #1a1333, #0b0b1d);
-    overflow: hidden;
-    z-index: -5;
-    opacity: 0;
-    transition: opacity 2s ease;
-  }
-  .sky.visible { opacity: 1; }
+  .sky { position:fixed; width:100%; height:100%; overflow:hidden; z-index:-5; }
+  .moon { position:absolute; top:5%; right:8%; width:160px; height:160px; background:radial-gradient(circle at 30%30%, #fff,#ddd 60%,#aaa 100%); border-radius:50%; box-shadow:0 0 50px 20px rgba(255,255,200,0.4); transform:scale(1); transition:transform 1.5s ease-out,opacity 1.5s ease-out; }
+  .star { position:absolute; background:white; border-radius:50%; opacity:0.8; animation:twinkle 2s infinite ease-in-out; }
+  @keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
+  .shooting-star { position:absolute; width:120px; height:2px; background:linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0)); opacity:0; transform:rotate(-30deg); filter:drop-shadow(0 0 6px white); animation:shoot 1.8s ease-out forwards; }
+  @keyframes shoot { 0%{opacity:1;transform:translate(0,0) rotate(-30deg);} 70%{opacity:1;transform:translate(300px,150px) rotate(-30deg);} 100%{opacity:0;transform:translate(450px,250px) rotate(-30deg);} }
+  .cloud { position:absolute; background:rgba(255,255,255,0.1); border-radius:50%; animation:moveClouds 100s linear infinite; filter:blur(30px); }
+  @keyframes moveClouds { from{transform:translateX(-200px);} to{transform:translateX(100vw);} }
 
-  .moon {
-    position: absolute;
-    top: 5%; right: 8%;
-    width: 160px; height: 160px;
-    background: radial-gradient(circle at 30% 30%, #fff, #ddd 60%, #aaa 100%);
-    border-radius: 50%;
-    box-shadow: 0 0 50px 20px rgba(255,255,200,0.4);
-  }
-  .star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.8;
-    animation: twinkle 2s infinite ease-in-out;
-  }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 1; }
-  }
-
-  /* MAIN SECTIONS */
-  section {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 1s, transform 1s;
-    padding: 200px 20px;
-    text-align: center;
-  }
-  section:first-of-type { padding-top: 430px; }
-  section.visible { opacity: 1; transform: translateY(0); }
-
-  .timeline { width: 80%; margin: 120px auto; max-width: 600px; text-align: left; }
-  .event { margin: 120px 0; position: relative; }
-  .event::before {
-    content: ""; position: absolute; left: 50%; top: -80px;
-    width: 4px; height: 160px; background: #f2eee7; transform: translateX(-50%);
-  }
-
-  .tab {
-    display: inline-block;
-    background-color: rgba(229,225,216,0.8);
-    color: #3b2f2f; padding: 10px 20px; margin: 10px;
-    border-radius: 20px; cursor: pointer;
-  }
-  .letter {
-    display: none; margin: 20px auto; max-width: 500px;
-    background-color: rgba(247,244,238,0.9);
-    padding: 20px; border-radius: 15px; color: #3b2f2f;
-  }
+  /* SECTIONS */
+  section { opacity:0; transform:translateY(50px); transition:opacity 1s, transform 1s; padding:200px 20px; text-align:center; }
+  section:first-of-type { padding-top:430px; } 
+  section.visible { opacity:1; transform:translateY(0); }
+  .timeline { position:relative; width:80%; margin:120px auto; max-width:600px; text-align:left; }
+  .event { margin:120px 0; position:relative; }
+  .event::before { content:""; position:absolute; left:50%; top:-80px; width:4px; height:160px; background:#f2eee7; transform:translateX(-50%); }
+  .footstep { position:absolute; width:30px; height:30px; opacity:0; transition:0.5s; }
+  #leftFoot{transform:rotate(-20deg);} #rightFoot{transform:rotate(20deg);}
+  .tab { display:inline-block; background-color:rgba(229,225,216,0.8); color:#3b2f2f; padding:10px 20px; margin:10px; border-radius:20px; cursor:pointer; transition:0.3s; }
+  .tab:hover{background-color:#d8d4c7;}
+  .letter { display:none; margin:20px auto; max-width:500px; background-color:rgba(247,244,238,0.9); padding:20px; border-radius:15px; color:#3b2f2f; box-shadow:0 0 10px rgba(0,0,0,0.3); }
 </style>
 </head>
 <body>
@@ -145,27 +66,27 @@
 </div>
 
 <!-- OVERLAY -->
-<div class="intro-overlay" id="introOverlay" onclick="closeIntro()">
+<div class="intro-overlay" id="introOverlay">
   <div class="floating-icons" id="floatingIcons"></div>
   <span id="line1"></span>
   <span id="line2" class="line2"></span>
   <small id="clickText">(Click anywhere to continue)</small>
 </div>
 
-<!-- MAIN -->
-<div class="main-content" id="mainContent">
-  <div class="sky" id="sky">
-    <div class="moon"></div>
-  </div>
+<!-- MAIN CONTENT -->
+<main id="mainPage">
+  <div class="sky" id="sky"></div>
 
   <section id="section1">
     <h1>Happy 1 Year Anniversary ❤️</h1>
-    <p>Under this starry sky, it’s always been you and me 🌙</p>
+    <p>Each step, each laugh, each tear... brought us closer together.</p>
   </section>
 
   <section id="timeline-section">
-    <h2>Our Journey 🌟</h2>
+    <h2>Our Journey 🌙</h2>
     <div class="timeline">
+      <div class="footstep" id="leftFoot">👣</div>
+      <div class="footstep" id="rightFoot">👣</div>
       <div class="event">✨ The First Message</div>
       <div class="event">💌 The First Date</div>
       <div class="event">🌸 The First "I Love You"</div>
@@ -179,107 +100,157 @@
     <div class="tab" onclick="showLetter('letter2')">Letter 2</div>
     <div id="letter1" class="letter">
       <h3>Letter 1</h3>
-      <p>My love, every star tonight reminds me of your eyes...</p>
+      <p>My love, this year with you has been amazing. Every moment with you is precious...</p>
     </div>
     <div id="letter2" class="letter">
       <h3>Letter 2</h3>
-      <p>Through time and distance, my heart always finds its way back to you 💞</p>
+      <p>I still remember the day we met, and I cherish every day spent with you...</p>
     </div>
   </section>
-</div>
 
+  <section>
+    <h2>Mini Game 💞</h2>
+    <button class="tab" onclick="loveGame()">How much do you love me?</button>
+    <p id="loveResult" style="margin-top:15px;"></p>
+  </section>
+
+</main>
+
+<!-- AUDIO -->
 <audio id="bg-music" loop>
   <source src="mylove.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-function checkPassword() {
+/* ========== PASSWORD ========== */
+function checkPassword(){
   const pw = document.getElementById('pwInput');
-  if (pw.value === '1510') {
-    const gate = document.getElementById('passwordGate');
-    gate.style.opacity = '0';
-    setTimeout(() => {
-      gate.style.display = 'none';
-      showOverlay();
-    }, 800);
-  } else {
-    pw.classList.add('wrong');
-    pw.value = 'Wrong';
-    setTimeout(() => { pw.classList.remove('wrong'); pw.value = ''; }, 1000);
+  if(pw.value==='1510'){
+    document.getElementById('passwordGate').style.display='none';
+    showOverlay();
+  }else{
+    pw.classList.add('wrong'); pw.value='Wrong';
+    setTimeout(()=>{ pw.classList.remove('wrong'); pw.value=''; },1000);
   }
 }
 
-function showOverlay() {
-  const overlay = document.getElementById('introOverlay');
-  overlay.style.display = 'flex';
-  document.getElementById('mainContent').style.visibility = 'hidden';
+/* ========== OVERLAY ========== */
+const overlay = document.getElementById('introOverlay');
+const line1 = document.getElementById('line1');
+const line2 = document.getElementById('line2');
+const clickText = document.getElementById('clickText');
+const floatingIcons = document.getElementById('floatingIcons');
+const text1 = "🎉❤️Happy Anniversary❤️🎉";
+const text2 = "October 2024 - October 2025";
 
+function showOverlay(){
+  overlay.style.display='flex';
+
+  // icon float ngay
   const icons = ["❤️","💫","🌙","💐","✨"];
-  const floatContainer = document.getElementById('floatingIcons');
-  function createIcon() {
-    const icon = document.createElement('div');
-    icon.className = 'floating-icon';
-    icon.textContent = icons[Math.floor(Math.random() * icons.length)];
-    icon.style.left = `${Math.random() * 100}%`;
-    icon.style.bottom = '-30px';
-    icon.style.animationDuration = `${4 + Math.random() * 3}s`;
-    floatContainer.appendChild(icon);
-    setTimeout(() => icon.remove(), 7000);
+  function createFloatingIcon(){
+    const icon=document.createElement('div');
+    icon.className='floating-icon';
+    icon.textContent=icons[Math.floor(Math.random()*icons.length)];
+    icon.style.left=Math.random()*100+'%';
+    icon.style.bottom='-30px';
+    icon.style.animationDuration=4+Math.random()*3+'s';
+    floatingIcons.appendChild(icon);
+    setTimeout(()=>icon.remove(),7000);
   }
-  setInterval(createIcon, 500);
+  setInterval(createFloatingIcon,500);
 
-  const text1 = "🎉❤️Happy Anniversary❤️🎉";
-  const text2 = "October 2024 - October 2025";
-  const line1 = document.getElementById('line1');
-  const line2 = document.getElementById('line2');
-  const clickText = document.getElementById('clickText');
-  setTimeout(() => {
-    typeText(text1, line1, () =>
-      typeText(text2, line2, () => clickText.classList.add('visible'))
-    );
-  }, 2000);
+  setTimeout(()=>{
+    typeText(text1,line1,()=>{ typeText(text2,line2,()=>{ clickText.classList.add('visible'); }); });
+  },2000);
+
+  overlay.addEventListener('click',handleIntroClick);
+}
+function typeText(text,el,callback){
+  let i=0;
+  function typing(){ if(i<text.length){ el.textContent+=text[i]; i++; setTimeout(typing,100);}else if(callback)callback(); }
+  typing();
+}
+let introClosing=false;
+function handleIntroClick(){ if(introClosing)return; introClosing=true; closeIntro();}
+function closeIntro(){
+  overlay.style.transition='opacity 0.9s ease'; overlay.style.opacity=0;
+  setTimeout(()=>{ overlay.style.display='none'; document.getElementById('mainPage').style.display='block'; initSky();},900);
+  const music = document.getElementById('bg-music'); music.volume=0.7; music.play().catch(e=>console.log(e));
 }
 
-function typeText(text, el, callback) {
-  let i = 0;
-  (function typing() {
-    if (i < text.length) {
-      el.textContent += text.charAt(i++);
-      setTimeout(typing, 100);
-    } else if (callback) callback();
-  })();
+/* ========== SKY & MAIN CONTENT ========== */
+function initSky(){
+  const sky=document.getElementById('sky');
+  const moon=document.createElement('div'); moon.className='moon'; sky.appendChild(moon);
+
+  for(let i=0;i<150;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*2+1; s.style.width=size+'px'; s.style.height=size+'px';
+    s.style.top=Math.random()*100+'%'; s.style.left=Math.random()*100+'%';
+    s.style.animationDelay=Math.random()*3+'s';
+    sky.appendChild(s);
+  }
+  function createShootingStar(){
+    const star=document.createElement('div'); star.className='shooting-star';
+    star.style.top=Math.random()*40+'%'; star.style.left=Math.random()*60+'%';
+    sky.appendChild(star); setTimeout(()=>star.remove(),1800);
+  }
+  setInterval(()=>{ if(Math.random()<0.4) createShootingStar(); },4000);
+
+  for(let i=0;i<4;i++){
+    const cloud=document.createElement('div'); cloud.className='cloud';
+    cloud.style.width=200+Math.random()*250+'px'; cloud.style.height=100+Math.random()*60+'px';
+    cloud.style.top=20+Math.random()*50+'%';
+    cloud.style.animationDuration=80+Math.random()*40+'s';
+    sky.appendChild(cloud);
+  }
+
+  // scroll -> shrink moon
+  let moonShrinkActive=false;
+  window.addEventListener('scroll',()=>{
+    const sec1=document.getElementById('section1');
+    if(sec1.getBoundingClientRect().top<window.innerHeight*0.8) moonShrinkActive=true;
+    if(!moonShrinkActive) return;
+    const scrollY=window.scrollY;
+    const scale=Math.max(0.7,1-scrollY/2500);
+    moon.style.transform=`scale(${scale})`;
+    moon.style.opacity=Math.max(0.5,1-scrollY/1800);
+  });
+
+  // reveal sections
+  const sections=document.querySelectorAll('section');
+  window.addEventListener('scroll',()=>{
+    const trigger=window.innerHeight*0.8;
+    sections.forEach(sec=>{ if(sec.getBoundingClientRect().top<trigger) sec.classList.add('visible'); });
+  });
+
+  // footsteps
+  let walked=false;
+  window.addEventListener('scroll',()=>{
+    const timeline=document.getElementById("timeline-section"); if(!timeline)return;
+    const rect=timeline.getBoundingClientRect();
+    if(rect.top<window.innerHeight*0.8 && !walked){ walked=true; walkFootsteps(); }
+  });
+}
+function walkFootsteps(){
+  const left=document.getElementById('leftFoot'); const right=document.getElementById('rightFoot');
+  let steps=8; let pos=0;
+  function step(){
+    if(pos<steps){
+      let y=pos*90+20;
+      if(pos%2===0){ left.style.opacity=1; left.style.top=y+'px'; left.style.left='47%'; }
+      else { right.style.opacity=1; right.style.top=y+'px'; right.style.left='51%'; }
+      pos++; setTimeout(step,500);
+    }
+  }
+  step();
 }
 
-function closeIntro() {
-  const overlay = document.getElementById('introOverlay');
-  overlay.classList.add('fade-out');
-  document.getElementById('mainContent').style.visibility = 'visible';
-  document.body.style.backgroundColor = '#0b0b1d';
-  document.getElementById('sky').classList.add('visible'); // 🌟 hiện bầu trời sao
-  const music = document.getElementById('bg-music');
-  music.volume = 0.7;
-  music.play().catch(() => {});
-  setTimeout(() => overlay.style.display = 'none', 1000);
-}
-
-// hiệu ứng sao
-const sky = document.getElementById('sky');
-for (let i = 0; i < 120; i++) {
-  const star = document.createElement('div');
-  star.classList.add('star');
-  const size = Math.random() * 2;
-  star.style.width = size + 'px';
-  star.style.height = size + 'px';
-  star.style.top = Math.random() * 100 + '%';
-  star.style.left = Math.random() * 100 + '%';
-  star.style.animationDuration = (1 + Math.random() * 2) + 's';
-  sky.appendChild(star);
-}
-
-function showLetter(id) {
-  document.querySelectorAll('.letter').forEach(l => l.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-}
+/* ========== LETTERS & MINI GAME ========== */
+function showLetter(id){ document.querySelectorAll('.letter').forEach(l=>l.style.display='none'); document.getElementById(id).style.display='block'; }
+function loveGame(){ const res=document.getElementById('loveResult'); const msgs=["I love you more 😘","Infinity and beyond ❤️","You’re my world 🌎","Always and forever 💞"]; res.textContent=msgs[Math.floor(Math.random()*msgs.length)]; }
 </script>
 </body>
 </html>

@@ -119,7 +119,7 @@
       position: absolute;
       font-size: 1.5em;
       opacity: 0.8;
-      animation: floatIcons 10s linear infinite;
+      animation: floatIcons 10s linear forwards;
       z-index: 1;
       bottom: -2vh;
     }
@@ -195,7 +195,7 @@
         gate.style.opacity = '0';
         setTimeout(() => {
           gate.style.display = 'none';
-          showOverlay(); // hiện overlay liền ngay lập tức
+          showOverlay();
         }, 300);
       } else {
         pwInput.classList.add('wrong');
@@ -214,21 +214,11 @@
     const line1 = document.getElementById("line1");
     const line2 = document.getElementById("line2");
     const clickText = document.getElementById("clickText");
+    const icons = ['💖','✨','🌙','💫','🌸','💌'];
 
     function showOverlay() {
       overlay.style.display = 'flex';
-
-      // Icon float xuất hiện ngay lập tức
-      const icons = ['💖','✨','🌙','💫','🌸','💌'];
-      for (let i = 0; i < 25; i++) {
-        const icon = document.createElement('div');
-        icon.className = 'floating-icon';
-        icon.textContent = icons[Math.floor(Math.random() * icons.length)];
-        icon.style.left = Math.random() * 100 + 'vw';
-        icon.style.animationDuration = (8 + Math.random() * 5) + 's';
-        icon.style.fontSize = (1 + Math.random() * 1.5) + 'em';
-        overlay.appendChild(icon);
-      }
+      startIconFlow();
 
       // Sau 2 giây mới bắt đầu typing
       setTimeout(() => {
@@ -238,6 +228,20 @@
           });
         });
       }, 2000);
+    }
+
+    // Tạo icon liên tục và đều đều
+    function startIconFlow() {
+      setInterval(() => {
+        const icon = document.createElement('div');
+        icon.className = 'floating-icon';
+        icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+        icon.style.left = Math.random() * 100 + 'vw';
+        icon.style.animationDuration = (8 + Math.random() * 5) + 's';
+        icon.style.fontSize = (1 + Math.random() * 1.5) + 'em';
+        overlay.appendChild(icon);
+        setTimeout(() => icon.remove(), 11000);
+      }, 400); // xuất hiện icon mới mỗi 0.4 giây
     }
 
     function typeText(text, el, callback) {

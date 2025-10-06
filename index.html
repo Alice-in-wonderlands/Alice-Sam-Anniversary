@@ -1,266 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anniversary Intro</title>
-<style>
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #0b0f26;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    color: #f2eee7;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1 Year Anniversary</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #0b0b1d;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #f2eee7;
+      overflow-x: hidden;
+    }
 
-  /* ===== PASSWORD SCREEN ===== */
-  .password-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, #0b0f26 20%, #000 90%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #f2eee7;
-    z-index: 10000;
-  }
+    /* ============ PASSWORD GATE ============ */
+    .password-gate {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: #1a0d0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      transition: opacity 1s ease;
+    }
+    .password-gate h2 {
+      color: #f2eee7;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+    .password-gate input {
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      text-align: center;
+      font-size: 1em;
+      outline: none;
+      background-color: #f2eee7;
+      color: #3b2f2f;
+      transition: all 0.3s ease;
+    }
+    .password-gate input.wrong {
+      background-color: #ffb3b3;
+      color: #590818;
+    }
+    .password-gate button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      background-color: #590818;
+      color: #f2eee7;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+    .password-gate button:hover {
+      background-color: #7a1b27;
+    }
 
-  .password-screen h2 {
-    margin-bottom: 20px;
-  }
+    /* ============ OVERLAY INTRO ============ */
+    .intro-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: #590818;
+      color: #f2eee7;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      z-index: 9999;
+      cursor: pointer;
+      flex-direction: column;
+      overflow: hidden;
+      transition: opacity 1s ease;
+    }
 
-  .password-input {
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: none;
-    outline: none;
-    font-size: 1em;
-    text-align: center;
-  }
+    .intro-overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
 
-  .wrong {
-    border: 2px solid red;
-    color: red;
-  }
+    .intro-overlay span {
+      font-size: 2em;
+      margin-bottom: 20px;
+      white-space: pre;
+      position: relative;
+      z-index: 2;
+    }
 
-  /* ===== INTRO OVERLAY ===== */
-  .intro-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at top, #1a0a1f 0%, #0b0f26 80%);
-    color: #f2eee7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5em;
-    font-weight: bold;
-    z-index: 9999;
-    cursor: pointer;
-    overflow: hidden;
-  }
+    .intro-overlay .line2 {
+      font-size: 1.5em;
+      margin-top: 0;
+      z-index: 2;
+    }
 
-  .intro-overlay span {
-    font-size: 2em;
-    margin-bottom: 20px;
-    white-space: pre;
-    z-index: 5;
-  }
+    .intro-overlay small {
+      font-size: 0.6em;
+      font-weight: 300;
+      opacity: 0;
+      margin-top: 25px;
+      transition: opacity 1.5s ease;
+      z-index: 2;
+    }
 
-  .intro-overlay .line2 {
-    font-size: 1.5em;
-    margin-top: 0;
-    z-index: 5;
-  }
+    .intro-overlay small.visible {
+      opacity: 0.8;
+    }
 
-  .intro-overlay small {
-    font-size: 0.6em;
-    font-weight: 300;
-    opacity: 0;
-    margin-top: 25px;
-    transition: opacity 1.5s ease;
-    z-index: 5;
-  }
+    /* Floating icons */
+    .floating-icon {
+      position: absolute;
+      font-size: 1.5em;
+      opacity: 0.8;
+      animation: floatIcons 10s linear infinite;
+      z-index: 1;
+      bottom: -2vh;
+    }
 
-  .intro-overlay small.visible {
-    opacity: 0.8;
-  }
+    @keyframes floatIcons {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
 
-  /* ===== FLOATING ICONS ===== */
-  .floating-icon {
-    position: absolute;
-    opacity: 0.8;
-    bottom: -2vh;
-    animation: floatIcons linear infinite;
-    z-index: 2;
-  }
+    /* ============ MAIN PAGE ============ */
+    main {
+      display: none;
+      min-height: 100vh;
+      padding-top: 150px;
+      background: radial-gradient(circle at top right, #1a1333, #0b0b1d);
+    }
 
-  @keyframes floatIcons {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
-  }
+    h1 {
+      margin-top: 220px;
+      color: #f2eee7;
+      font-size: 2.2em;
+    }
 
-  /* ===== CLOUDS ===== */
-  .cloud {
-    position: absolute;
-    bottom: 10%;
-    opacity: 0.2;
-    width: 250px;
-    height: 120px;
-    background: #fff;
-    border-radius: 50%;
-    filter: blur(20px);
-    animation: moveClouds 60s linear infinite;
-  }
+    /* Stars */
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle 2s infinite ease-in-out;
+    }
 
-  @keyframes moveClouds {
-    from { transform: translateX(-300px); }
-    to { transform: translateX(110vw); }
-  }
-
-  /* ===== MOON ===== */
-  .moon {
-    position: fixed;
-    top: 60px;
-    right: 60px;
-    width: 180px;
-    height: 180px;
-    background: radial-gradient(circle at 30% 30%, #fff, #d9d9d9, #aaa);
-    border-radius: 50%;
-    box-shadow: 0 0 40px 15px #fff8, 0 0 80px 40px #ffd8a8;
-    z-index: 3;
-    transition: transform 4s ease;
-  }
-</style>
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
+  <!-- PASSWORD GATE -->
+  <div class="password-gate" id="passwordGate">
+    <h2>Enter the password to continue 💌</h2>
+    <input type="password" id="pwInput" placeholder="Enter password...">
+    <button onclick="checkPassword()">Enter</button>
+  </div>
 
-<!-- PASSWORD SCREEN -->
-<div class="password-screen" id="passwordScreen">
-  <h2>Enter Password 💌</h2>
-  <input type="password" id="passwordInput" class="password-input" placeholder="••••">
-</div>
+  <!-- INTRO OVERLAY -->
+  <div class="intro-overlay" id="introOverlay" onclick="closeIntro()">
+    <span id="line1"></span>
+    <span id="line2" class="line2"></span>
+    <small id="clickText">(Click anywhere to continue)</small>
+  </div>
 
-<!-- INTRO OVERLAY -->
-<div class="intro-overlay" id="introOverlay" style="display:none;">
-  <div id="moon" class="moon"></div>
-  <span id="line1"></span>
-  <span id="line2" class="line2"></span>
-  <small id="clickText">(Click anywhere to continue)</small>
-</div>
+  <!-- MAIN PAGE -->
+  <main id="mainPage">
+    <h1>Happy 1 Year Anniversary ❤️</h1>
+    <p>Welcome to our little universe of love ✨</p>
+  </main>
 
-<!-- AUDIO -->
-<audio id="bg-music" loop>
-  <source src="mylove.mp3" type="audio/mpeg">
-</audio>
+  <!-- AUDIO -->
+  <audio id="bg-music" loop>
+    <source src="mylove.mp3" type="audio/mpeg">
+  </audio>
 
-<script>
-const passwordInput = document.getElementById("passwordInput");
-const passwordScreen = document.getElementById("passwordScreen");
-const introOverlay = document.getElementById("introOverlay");
-const moon = document.getElementById("moon");
+  <script>
+    // ========== PASSWORD CHECK ==========
+    function checkPassword() {
+      const pwInput = document.getElementById('pwInput');
+      if (pwInput.value === '1510') {
+        const gate = document.getElementById('passwordGate');
+        gate.style.opacity = '0';
+        setTimeout(() => {
+          gate.style.display = 'none';
+          showOverlay(); // hiện overlay liền ngay lập tức
+        }, 300);
+      } else {
+        pwInput.classList.add('wrong');
+        pwInput.value = 'Wrong';
+        setTimeout(() => {
+          pwInput.classList.remove('wrong');
+          pwInput.value = '';
+        }, 1000);
+      }
+    }
 
-/* ===== PASSWORD ===== */
-passwordInput.addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    if (passwordInput.value === "1510") {
-      passwordScreen.style.display = "none";
-      introOverlay.style.display = "flex";
-      createFloatingIcons();
-      createClouds();
-      setTimeout(startTyping, 2000);
-    } else {
-      passwordInput.classList.add("wrong");
-      passwordInput.value = "wrong";
+    // ========== OVERLAY ==========
+    const overlay = document.getElementById('introOverlay');
+    const text1 = "🎉❤️Happy Anniversary❤️🎉";
+    const text2 = "October 2024 - October 2025";
+    const line1 = document.getElementById("line1");
+    const line2 = document.getElementById("line2");
+    const clickText = document.getElementById("clickText");
+
+    function showOverlay() {
+      overlay.style.display = 'flex';
+
+      // Icon float xuất hiện ngay lập tức
+      const icons = ['💖','✨','🌙','💫','🌸','💌'];
+      for (let i = 0; i < 25; i++) {
+        const icon = document.createElement('div');
+        icon.className = 'floating-icon';
+        icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+        icon.style.left = Math.random() * 100 + 'vw';
+        icon.style.animationDuration = (8 + Math.random() * 5) + 's';
+        icon.style.fontSize = (1 + Math.random() * 1.5) + 'em';
+        overlay.appendChild(icon);
+      }
+
+      // Sau 2 giây mới bắt đầu typing
       setTimeout(() => {
-        passwordInput.classList.remove("wrong");
-        passwordInput.value = "";
-      }, 800);
+        typeText(text1, line1, () => {
+          typeText(text2, line2, () => {
+            clickText.classList.add("visible");
+          });
+        });
+      }, 2000);
     }
-  }
-});
 
-/* ===== FLOATING ICONS ===== */
-function createFloatingIcons() {
-  const overlay = document.querySelector('.intro-overlay');
-  const icons = ['💫','✨','🌙','⭐','🌟','💖','🌌','💞'];
-  
-  for (let i = 0; i < 35; i++) {
-    const icon = document.createElement('div');
-    icon.classList.add('floating-icon');
-    icon.textContent = icons[Math.floor(Math.random() * icons.length)];
-    icon.style.left = Math.random() * 100 + 'vw';
-    const size = Math.random() * 1.2 + 0.6;
-    icon.style.fontSize = size + 'em';
-    const duration = Math.random() * 8 + 6;
-    icon.style.animationDuration = duration + 's';
-    const delay = Math.random() * 5;
-    icon.style.animationDelay = delay + 's';
-    overlay.appendChild(icon);
-  }
-}
-
-/* ===== CLOUDS ===== */
-function createClouds() {
-  const overlay = document.querySelector('.intro-overlay');
-  for (let i = 0; i < 4; i++) {
-    const cloud = document.createElement('div');
-    cloud.classList.add('cloud');
-    cloud.style.left = Math.random() * 80 + 'vw';
-    cloud.style.animationDelay = Math.random() * 20 + 's';
-    cloud.style.width = 200 + Math.random() * 200 + 'px';
-    cloud.style.height = 100 + Math.random() * 80 + 'px';
-    overlay.appendChild(cloud);
-  }
-}
-
-/* ===== TYPING ===== */
-const text1 = "🎉❤️Happy Anniversary❤️🎉";
-const text2 = "October 2024 - October 2025";
-const line1 = document.getElementById("line1");
-const line2 = document.getElementById("line2");
-const clickText = document.getElementById("clickText");
-
-function typeText(text, el, callback) {
-  let i = 0;
-  function typing() {
-    if (i < text.length) {
-      el.textContent += text.charAt(i);
-      i++;
-      setTimeout(typing, 100);
-    } else if (callback) {
-      callback();
+    function typeText(text, el, callback) {
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          setTimeout(typing, 100);
+        } else if (callback) callback();
+      }
+      typing();
     }
-  }
-  typing();
-}
 
-function startTyping() {
-  typeText(text1, line1, () => {
-    typeText(text2, line2, () => {
-      clickText.classList.add("visible");
-      setTimeout(() => { moon.style.transform = "scale(0.6)"; }, 1000);
-    });
-  });
-}
-
-/* ===== CLICK TO CONTINUE ===== */
-function closeIntro() {
-  const music = document.getElementById('bg-music');
-  music.volume = 0.7;
-  music.play().catch(err => console.log("Autoplay bị chặn:", err));
-  introOverlay.style.display = "none";
-}
-</script>
+    function closeIntro() {
+      overlay.classList.add('fade-out');
+      const music = document.getElementById('bg-music');
+      music.volume = 0.7;
+      music.play().catch(err => console.log("Autoplay bị chặn:", err));
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('mainPage').style.display = 'block';
+      }, 1000);
+    }
+  </script>
 </body>
 </html>

@@ -130,52 +130,6 @@
       font-size: 2.2em;
     }
 
-    .film-carousel {
-      width: 80%;
-      max-width: 1000px;
-      height: 260px;
-      overflow: hidden;
-      margin: 60px auto;
-      background-color: #222;
-      position: relative;
-      border-radius: 10px;
-    }
-
-    .film-carousel::before, .film-carousel::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      width: 100%;
-      height: 20px;
-      background-color: #222;
-      background-image: radial-gradient(circle, #f2eee7 40%, #222 41%);
-      background-size: 40px 40px;
-      background-repeat: repeat-x;
-      z-index: 2;
-    }
-
-    .film-carousel::before { top: 0; }
-    .film-carousel::after { bottom: 0; }
-
-    .film-track {
-      display: flex;
-      min-width: 200%;
-      animation: scroll 20s linear infinite;
-    }
-
-    .film-track img {
-      height: 220px;
-      flex-shrink: 0;
-      margin: 20px 5px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
     .tab {
       display: inline-block;
       background-color: #e5e1d8;
@@ -251,34 +205,6 @@
     <source src="mylove.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- MAIN CONTENT -->
-  <h1>Happy 1 Year Anniversary ❤️</h1>
-  <div class="film-carousel">
-    <div class="film-track">
-      <img src="WILL1.jpg" alt="Photo 1">
-      <img src="WILL2.jpg" alt="Photo 2">
-      <img src="WILL1.jpg" alt="Photo 1">
-      <img src="WILL2.jpg" alt="Photo 2">
-      <img src="WILL1.jpg" alt="Photo 1">
-      <img src="WILL2.jpg" alt="Photo 2">
-    </div>
-  </div>
-
-  <div>
-    <div class="tab" onclick="showLetter('letter1')">Love Letter 1</div>
-    <div class="tab" onclick="showLetter('letter2')">Love Letter 2</div>
-  </div>
-
-  <div id="letter1" class="letter">
-    <h3>Letter 1</h3>
-    <p>My love, this year with you has been amazing. Every moment with you is precious...</p>
-  </div>
-
-  <div id="letter2" class="letter">
-    <h3>Letter 2</h3>
-    <p>I still remember the day we met, and I cherish every day spent with you...</p>
-  </div>
-
   <script>
     function checkPassword() {
       const pwInput = document.getElementById('pwInput');
@@ -287,7 +213,13 @@
         gate.style.opacity = '0';
         setTimeout(() => {
           gate.style.display = 'none';
-          document.getElementById('introOverlay').style.display = 'flex';
+          const overlay = document.getElementById('introOverlay');
+          overlay.style.display = 'flex';
+
+          // Các icon float xuất hiện trước
+          setTimeout(() => {
+            startTyping();
+          }, 1500); // delay 1.5s rồi mới đánh chữ
         }, 800);
       } else {
         pwInput.classList.add('wrong');
@@ -297,12 +229,6 @@
           pwInput.value = '';
         }, 1000);
       }
-    }
-
-    function showLetter(id) {
-      const letters = document.querySelectorAll('.letter');
-      letters.forEach(letter => letter.style.display = 'none');
-      document.getElementById(id).style.display = 'block';
     }
 
     function closeIntro() {
@@ -331,7 +257,7 @@
       typing();
     }
 
-    window.onload = () => {
+    function startTyping() {
       setTimeout(() => {
         typeText(text1, line1, () => {
           typeText(text2, line2, () => {
@@ -339,7 +265,7 @@
           });
         });
       }, 2000);
-    };
+    }
   </script>
 </body>
 </html>

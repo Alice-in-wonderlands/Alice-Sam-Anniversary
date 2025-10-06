@@ -13,7 +13,12 @@
     background: radial-gradient(circle at 50% 80%, #0b0b1a 0%, #01010a 100%);
   }
 
-  /* ======= PASSWORD GATE ======= */
+  /* === Ẩn toàn bộ nội dung chính trước khi overlay hiện === */
+  .main-content {
+    visibility: hidden;
+  }
+
+  /* PASSWORD GATE */
   .password-gate {
     position: fixed;
     top: 0; left: 0;
@@ -61,7 +66,7 @@
     background-color: #7a1b27;
   }
 
-  /* ======= OVERLAY ======= */
+  /* OVERLAY */
   .intro-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -120,7 +125,7 @@
   }
   .intro-overlay small.visible { opacity: 0.8; }
 
-  /* ======= NIGHT SKY ======= */
+  /* NIGHT SKY */
   .sky {
     position: fixed;
     width: 100%;
@@ -178,7 +183,7 @@
     to { transform: translateX(100vw); }
   }
 
-  /* ======= MAIN CONTENT ======= */
+  /* MAIN SECTIONS */
   section {
     opacity: 0;
     transform: translateY(50px);
@@ -188,53 +193,6 @@
   }
   section:first-of-type { padding-top: 430px; }
   section.visible { opacity: 1; transform: translateY(0); }
-
-  .timeline {
-    position: relative;
-    width: 80%;
-    margin: 120px auto;
-    max-width: 600px;
-    text-align: left;
-  }
-  .event {
-    margin: 120px 0;
-    position: relative;
-  }
-  .event::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: -80px;
-    width: 4px;
-    height: 160px;
-    background: #f2eee7;
-    transform: translateX(-50%);
-  }
-  .footstep { position: absolute; width: 30px; height: 30px; opacity: 0; transition: opacity 0.5s; }
-  #leftFoot { transform: rotate(-20deg); }
-  #rightFoot { transform: rotate(20deg); }
-
-  .tab {
-    display: inline-block;
-    background-color: rgba(229, 225, 216, 0.8);
-    color: #3b2f2f;
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  .tab:hover { background-color: #d8d4c7; }
-  .letter {
-    display: none;
-    margin: 20px auto;
-    max-width: 500px;
-    background-color: rgba(247, 244, 238, 0.9);
-    padding: 20px;
-    border-radius: 15px;
-    color: #3b2f2f;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  }
 </style>
 </head>
 <body>
@@ -245,7 +203,7 @@
   <button onclick="checkPassword()">Enter</button>
 </div>
 
-<!-- INTRO OVERLAY -->
+<!-- OVERLAY -->
 <div class="intro-overlay" id="introOverlay" onclick="closeIntro()">
   <div class="floating-icons" id="floatingIcons"></div>
   <span id="line1"></span>
@@ -253,48 +211,16 @@
   <small id="clickText">(Click anywhere to continue)</small>
 </div>
 
-<!-- NIGHT SKY -->
-<div class="sky" id="sky">
-  <div class="moon" id="moon"></div>
-</div>
-
 <!-- MAIN CONTENT -->
-<section id="section1">
-  <h1>Happy 1 Year Anniversary ❤️</h1>
-  <p>Each step, each laugh, each tear... brought us closer together.</p>
-</section>
-
-<section id="timeline-section">
-  <h2>Our Journey 🌙</h2>
-  <div class="timeline">
-    <div class="footstep" id="leftFoot">👣</div>
-    <div class="footstep" id="rightFoot">👣</div>
-    <div class="event">✨ The First Message</div>
-    <div class="event">💌 The First Date</div>
-    <div class="event">🌸 The First "I Love You"</div>
-    <div class="event">🌕 Our 1st Anniversary</div>
+<div class="main-content" id="mainContent">
+  <div class="sky" id="sky">
+    <div class="moon" id="moon"></div>
   </div>
-</section>
-
-<section>
-  <h2>Love Letters 💖</h2>
-  <div class="tab" onclick="showLetter('letter1')">Letter 1</div>
-  <div class="tab" onclick="showLetter('letter2')">Letter 2</div>
-  <div id="letter1" class="letter">
-    <h3>Letter 1</h3>
-    <p>My love, this year with you has been amazing. Every moment with you is precious...</p>
-  </div>
-  <div id="letter2" class="letter">
-    <h3>Letter 2</h3>
-    <p>I still remember the day we met, and I cherish every day spent with you...</p>
-  </div>
-</section>
-
-<section>
-  <h2>Mini Game 💞</h2>
-  <button class="tab" onclick="loveGame()">How much do you love me?</button>
-  <p id="loveResult" style="margin-top:15px;"></p>
-</section>
+  <section id="section1">
+    <h1>Happy 1 Year Anniversary ❤️</h1>
+    <p>Each step, each laugh, each tear... brought us closer together.</p>
+  </section>
+</div>
 
 <audio id="bg-music" loop>
   <source src="mylove.mp3" type="audio/mpeg">
@@ -320,6 +246,9 @@ function checkPassword() {
 function showOverlay() {
   const overlay = document.getElementById('introOverlay');
   overlay.style.display = 'flex';
+  document.getElementById('mainContent').style.visibility = 'hidden'; // Ẩn main khi overlay hiện
+
+  // float icons
   const icons = ["❤️", "💫", "🌙", "💐", "✨"];
   const floatContainer = document.getElementById('floatingIcons');
   function createIcon() {
@@ -357,48 +286,12 @@ function typeText(text, el, callback) {
 function closeIntro() {
   const overlay = document.getElementById('introOverlay');
   overlay.classList.add('fade-out');
+  document.getElementById('mainContent').style.visibility = 'visible'; // Hiện main khi overlay biến mất
   const music = document.getElementById('bg-music');
   music.volume = 0.7;
   music.play().catch(()=>{});
   setTimeout(() => overlay.style.display = 'none', 1000);
 }
-
-/* === SKY ELEMENTS === */
-const sky = document.getElementById('sky');
-for(let i=0;i<150;i++){const s=document.createElement('div');s.className='star';
-const size=Math.random()*2+1;
-s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s`;
-sky.appendChild(s);}
-function createShootingStar(){const st=document.createElement('div');st.className='shooting-star';
-st.style.top=`${Math.random()*40}%`;st.style.left=`${Math.random()*60}%`;
-sky.appendChild(st);setTimeout(()=>st.remove(),1800);}
-setInterval(()=>{if(Math.random()<0.4)createShootingStar();},4000);
-for(let i=0;i<4;i++){const c=document.createElement('div');c.className='cloud';
-c.style.width=`${200+Math.random()*250}px`;c.style.height=`${100+Math.random()*60}px`;
-c.style.top=`${20+Math.random()*50}%`;c.style.animationDuration=`${80+Math.random()*40}s`;sky.appendChild(c);}
-
-/* === SECTIONS === */
-const moon=document.getElementById('moon');let moonShrinkActive=false;
-window.addEventListener('scroll',()=>{const trigger=window.innerHeight*0.8;
-document.querySelectorAll('section').forEach(sec=>{if(sec.getBoundingClientRect().top<trigger){
-sec.classList.add('visible');if(sec.id==='section1')moonShrinkActive=true;}});});
-window.addEventListener('scroll',()=>{if(!moonShrinkActive)return;
-const y=window.scrollY;const sc=Math.max(0.7,1-y/2500);moon.style.transform=`scale(${sc})`;
-moon.style.opacity=Math.max(0.5,1-y/1800);});
-
-function showLetter(id){document.querySelectorAll('.letter').forEach(l=>l.style.display='none');
-document.getElementById(id).style.display='block';}
-
-function loveGame(){const res=document.getElementById('loveResult');
-const msgs=["I love you more 😘","Infinity and beyond ❤️","You’re my world 🌎","Always and forever 💞"];
-res.textContent=msgs[Math.floor(Math.random()*msgs.length)];}
-
-let walked=false;
-window.addEventListener('scroll',()=>{const t=document.getElementById('timeline-section');
-if(!t)return;const r=t.getBoundingClientRect();if(r.top<window.innerHeight*0.8&&!walked){walked=true;walkFootsteps();}});
-function walkFootsteps(){const L=document.getElementById('leftFoot'),R=document.getElementById('rightFoot');
-let pos=0;function step(){if(pos<8){let y=pos*90+20;if(pos%2===0){L.style.opacity=1;L.style.top=y+"px";L.style.left="47%";}
-else{R.style.opacity=1;R.style.top=y+"px";R.style.left="51%";}pos++;setTimeout(step,500);}}step();}
 </script>
 </body>
 </html>

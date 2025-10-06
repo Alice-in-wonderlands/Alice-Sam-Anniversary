@@ -10,7 +10,8 @@
     font-family: 'Arial', sans-serif;
     color: #f2eee7;
     overflow-x: hidden;
-    background: radial-gradient(circle at 50% 80%, #0b0b1a 0%, #01010a 100%);
+    background-color: #590818; /* 👈 cùng màu overlay ban đầu */
+    transition: background-color 1.5s ease; /* 👈 mượt khi đổi sang nền đêm */
   }
 
   /* === Ẩn toàn bộ nội dung chính trước khi overlay hiện === */
@@ -34,7 +35,6 @@
   .password-gate h2 {
     color: #f2eee7;
     margin-bottom: 20px;
-    font-size: 1.5em;
   }
   .password-gate input {
     padding: 10px 20px;
@@ -59,12 +59,9 @@
     cursor: pointer;
     background-color: #590818;
     color: #f2eee7;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
   }
-  .password-gate button:hover {
-    background-color: #7a1b27;
-  }
+  .password-gate button:hover { background-color: #7a1b27; }
 
   /* OVERLAY */
   .intro-overlay {
@@ -193,6 +190,53 @@
   }
   section:first-of-type { padding-top: 430px; }
   section.visible { opacity: 1; transform: translateY(0); }
+
+  .timeline {
+    position: relative;
+    width: 80%;
+    margin: 120px auto;
+    max-width: 600px;
+    text-align: left;
+  }
+  .event {
+    margin: 120px 0;
+    position: relative;
+  }
+  .event::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -80px;
+    width: 4px;
+    height: 160px;
+    background: #f2eee7;
+    transform: translateX(-50%);
+  }
+  .footstep { position: absolute; width: 30px; height: 30px; opacity: 0; transition: opacity 0.5s; }
+  #leftFoot { transform: rotate(-20deg); }
+  #rightFoot { transform: rotate(20deg); }
+
+  .tab {
+    display: inline-block;
+    background-color: rgba(229, 225, 216, 0.8);
+    color: #3b2f2f;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .tab:hover { background-color: #d8d4c7; }
+  .letter {
+    display: none;
+    margin: 20px auto;
+    max-width: 500px;
+    background-color: rgba(247, 244, 238, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    color: #3b2f2f;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
 </style>
 </head>
 <body>
@@ -216,9 +260,42 @@
   <div class="sky" id="sky">
     <div class="moon" id="moon"></div>
   </div>
+
   <section id="section1">
     <h1>Happy 1 Year Anniversary ❤️</h1>
     <p>Each step, each laugh, each tear... brought us closer together.</p>
+  </section>
+
+  <section id="timeline-section">
+    <h2>Our Journey 🌙</h2>
+    <div class="timeline">
+      <div class="footstep" id="leftFoot">👣</div>
+      <div class="footstep" id="rightFoot">👣</div>
+      <div class="event">✨ The First Message</div>
+      <div class="event">💌 The First Date</div>
+      <div class="event">🌸 The First "I Love You"</div>
+      <div class="event">🌕 Our 1st Anniversary</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Love Letters 💖</h2>
+    <div class="tab" onclick="showLetter('letter1')">Letter 1</div>
+    <div class="tab" onclick="showLetter('letter2')">Letter 2</div>
+    <div id="letter1" class="letter">
+      <h3>Letter 1</h3>
+      <p>My love, this year with you has been amazing. Every moment with you is precious...</p>
+    </div>
+    <div id="letter2" class="letter">
+      <h3>Letter 2</h3>
+      <p>I still remember the day we met, and I cherish every day spent with you...</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mini Game 💞</h2>
+    <button class="tab" onclick="loveGame()">How much do you love me?</button>
+    <p id="loveResult" style="margin-top:15px;"></p>
   </section>
 </div>
 
@@ -246,51 +323,68 @@ function checkPassword() {
 function showOverlay() {
   const overlay = document.getElementById('introOverlay');
   overlay.style.display = 'flex';
-  document.getElementById('mainContent').style.visibility = 'hidden'; // Ẩn main khi overlay hiện
-
-  // float icons
-  const icons = ["❤️", "💫", "🌙", "💐", "✨"];
+  document.getElementById('mainContent').style.visibility = 'hidden';
+  const icons = ["❤️","💫","🌙","💐","✨"];
   const floatContainer = document.getElementById('floatingIcons');
-  function createIcon() {
-    const icon = document.createElement('div');
-    icon.className = 'floating-icon';
-    icon.textContent = icons[Math.floor(Math.random()*icons.length)];
-    icon.style.left = `${Math.random()*100}%`;
-    icon.style.bottom = '-30px';
-    icon.style.animationDuration = `${4+Math.random()*3}s`;
+  function createIcon(){
+    const icon=document.createElement('div');
+    icon.className='floating-icon';
+    icon.textContent=icons[Math.floor(Math.random()*icons.length)];
+    icon.style.left=`${Math.random()*100}%`;
+    icon.style.bottom='-30px';
+    icon.style.animationDuration=`${4+Math.random()*3}s`;
     floatContainer.appendChild(icon);
-    setTimeout(() => icon.remove(), 7000);
+    setTimeout(()=>icon.remove(),7000);
   }
-  setInterval(createIcon, 500);
+  setInterval(createIcon,500);
 
-  const text1 = "🎉❤️Happy Anniversary❤️🎉";
-  const text2 = "October 2024 - October 2025";
-  const line1 = document.getElementById('line1');
-  const line2 = document.getElementById('line2');
-  const clickText = document.getElementById('clickText');
-  setTimeout(() => {
-    typeText(text1, line1, () => typeText(text2, line2, () => clickText.classList.add('visible')));
-  }, 2000);
+  const text1="🎉❤️Happy Anniversary❤️🎉";
+  const text2="October 2024 - October 2025";
+  const line1=document.getElementById('line1');
+  const line2=document.getElementById('line2');
+  const clickText=document.getElementById('clickText');
+  setTimeout(()=>{
+    typeText(text1,line1,()=>typeText(text2,line2,()=>clickText.classList.add('visible')));  
+  },2000);
 }
 
-function typeText(text, el, callback) {
-  let i = 0;
-  (function typing() {
-    if (i < text.length) {
-      el.textContent += text.charAt(i++);
-      setTimeout(typing, 100);
-    } else if (callback) callback();
+function typeText(text,el,callback){
+  let i=0;
+  (function typing(){
+    if(i<text.length){ el.textContent+=text.charAt(i++); setTimeout(typing,100);}
+    else if(callback) callback();
   })();
 }
 
-function closeIntro() {
-  const overlay = document.getElementById('introOverlay');
+function closeIntro(){
+  const overlay=document.getElementById('introOverlay');
   overlay.classList.add('fade-out');
-  document.getElementById('mainContent').style.visibility = 'visible'; // Hiện main khi overlay biến mất
-  const music = document.getElementById('bg-music');
-  music.volume = 0.7;
+  document.getElementById('mainContent').style.visibility='visible';
+  document.body.style.backgroundColor='#01010a'; // 👈 chuyển nền sang đêm
+  const music=document.getElementById('bg-music');
+  music.volume=0.7;
   music.play().catch(()=>{});
-  setTimeout(() => overlay.style.display = 'none', 1000);
+  setTimeout(()=>overlay.style.display='none',1000);
+}
+
+// Các hiệu ứng chính
+const sections=document.querySelectorAll('section');
+window.addEventListener('scroll',()=>{
+  const trigger=window.innerHeight*0.8;
+  sections.forEach(sec=>{
+    const top=sec.getBoundingClientRect().top;
+    if(top<trigger) sec.classList.add('visible');
+  });
+});
+
+function showLetter(id){
+  document.querySelectorAll('.letter').forEach(l=>l.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+function loveGame(){
+  const res=document.getElementById('loveResult');
+  const msgs=["I love you more 😘","Infinity and beyond ❤️","You’re my world 🌎","Always and forever 💞"];
+  res.textContent=msgs[Math.floor(Math.random()*msgs.length)];
 }
 </script>
 </body>

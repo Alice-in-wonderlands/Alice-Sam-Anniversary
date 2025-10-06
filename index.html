@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1 Year Anniversary</title>
+<title>Anniversary Intro</title>
 <style>
   body {
     font-family: 'Arial', sans-serif;
     background-color: #0b0f26;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow: hidden;
     color: #f2eee7;
   }
 
@@ -139,51 +139,7 @@
     border-radius: 50%;
     box-shadow: 0 0 40px 15px #fff8, 0 0 80px 40px #ffd8a8;
     z-index: 3;
-    transition: transform 3s ease;
-  }
-
-  /* ===== MAIN ===== */
-  main {
-    position: relative;
-    text-align: center;
-    padding-top: 250px;
-    z-index: 1;
-  }
-
-  h1 {
-    color: #f2eee7;
-    font-size: 3em;
-    margin-bottom: 60px;
-  }
-
-  .timeline {
-    position: relative;
-    width: 80%;
-    margin: 0 auto;
-    border-left: 3px solid #f2eee7;
-    padding-left: 30px;
-  }
-
-  .timeline-item {
-    margin: 100px 0;
-  }
-
-  .timeline-item::before {
-    content: '💖';
-    position: absolute;
-    left: -22px;
-    background-color: #0b0f26;
-    font-size: 1.4em;
-  }
-
-  .timeline-item h3 {
-    margin: 0;
-    font-size: 1.5em;
-  }
-
-  .timeline-item p {
-    font-size: 1.1em;
-    opacity: 0.9;
+    transition: transform 4s ease;
   }
 </style>
 </head>
@@ -196,36 +152,12 @@
 </div>
 
 <!-- INTRO OVERLAY -->
-<div class="intro-overlay" id="introOverlay" onclick="closeIntro()" style="display:none;">
+<div class="intro-overlay" id="introOverlay" style="display:none;">
   <div id="moon" class="moon"></div>
   <span id="line1"></span>
   <span id="line2" class="line2"></span>
   <small id="clickText">(Click anywhere to continue)</small>
 </div>
-
-<!-- MAIN -->
-<main id="mainContent" style="display:none;">
-  <h1>Happy 1 Year Anniversary ❤️</h1>
-
-  <div class="timeline">
-    <div class="timeline-item">
-      <h3>October 2024</h3>
-      <p>We met and everything changed.</p>
-    </div>
-    <div class="timeline-item">
-      <h3>December 2024</h3>
-      <p>Our first trip together. Still feels magical.</p>
-    </div>
-    <div class="timeline-item">
-      <h3>March 2025</h3>
-      <p>Through laughter and tears, we grew stronger.</p>
-    </div>
-    <div class="timeline-item">
-      <h3>October 2025</h3>
-      <p>One year later — my love, mine all mine. 💖</p>
-    </div>
-  </div>
-</main>
 
 <!-- AUDIO -->
 <audio id="bg-music" loop>
@@ -233,11 +165,12 @@
 </audio>
 
 <script>
-/* ========== PASSWORD LOGIC ========== */
 const passwordInput = document.getElementById("passwordInput");
 const passwordScreen = document.getElementById("passwordScreen");
 const introOverlay = document.getElementById("introOverlay");
+const moon = document.getElementById("moon");
 
+/* ===== PASSWORD ===== */
 passwordInput.addEventListener("keypress", function(e) {
   if (e.key === "Enter") {
     if (passwordInput.value === "1510") {
@@ -257,7 +190,7 @@ passwordInput.addEventListener("keypress", function(e) {
   }
 });
 
-/* ========== FLOATING ICONS ========== */
+/* ===== FLOATING ICONS ===== */
 function createFloatingIcons() {
   const overlay = document.querySelector('.intro-overlay');
   const icons = ['💫','✨','🌙','⭐','🌟','💖','🌌','💞'];
@@ -277,7 +210,7 @@ function createFloatingIcons() {
   }
 }
 
-/* ========== CLOUDS ========== */
+/* ===== CLOUDS ===== */
 function createClouds() {
   const overlay = document.querySelector('.intro-overlay');
   for (let i = 0; i < 4; i++) {
@@ -291,13 +224,12 @@ function createClouds() {
   }
 }
 
-/* ========== TYPING EFFECT ========== */
+/* ===== TYPING ===== */
 const text1 = "🎉❤️Happy Anniversary❤️🎉";
 const text2 = "October 2024 - October 2025";
 const line1 = document.getElementById("line1");
 const line2 = document.getElementById("line2");
 const clickText = document.getElementById("clickText");
-const moon = document.getElementById("moon");
 
 function typeText(text, el, callback) {
   let i = 0;
@@ -317,21 +249,17 @@ function startTyping() {
   typeText(text1, line1, () => {
     typeText(text2, line2, () => {
       clickText.classList.add("visible");
-      // bắt đầu hiệu ứng thu nhỏ mặt trăng sau khi typing xong
-      setTimeout(() => {
-        moon.style.transform = "scale(0.6)";
-      }, 1000);
+      setTimeout(() => { moon.style.transform = "scale(0.6)"; }, 1000);
     });
   });
 }
 
-/* ========== CLOSE INTRO ========== */
+/* ===== CLICK TO CONTINUE ===== */
 function closeIntro() {
-  introOverlay.style.display = "none";
-  document.getElementById("mainContent").style.display = "block";
   const music = document.getElementById('bg-music');
   music.volume = 0.7;
   music.play().catch(err => console.log("Autoplay bị chặn:", err));
+  introOverlay.style.display = "none";
 }
 </script>
 </body>

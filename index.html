@@ -30,12 +30,28 @@
   .password-gate button { margin-top: 15px; padding: 10px 25px; background-color: #590818; color: #f2eee7; cursor: pointer; }
   .password-gate button:hover { background-color: #7a1b27; }
 
-  /* OVERLAY */
+  /* SLIDE TRANSITION OVERLAY */
+  .transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(90deg, #ffb6c1, #590818);
+    transform: translateX(-100%);
+    transition: transform 1.2s ease-in-out;
+  }
+  .transition-overlay.active {
+    transform: translateX(0);
+  }
+  .transition-overlay.leave {
+    transform: translateX(100%);
+  }
+
+  /* INTRO OVERLAY */
   .intro-overlay {
     position: fixed; inset: 0;
     display: none; align-items: center; justify-content: center;
     flex-direction: column; background-color: #590818;
-    color: #f2eee7; z-index: 9999; overflow: hidden; cursor: pointer;
+    color: #f2eee7; z-index: 9000; overflow: hidden; cursor: pointer;
   }
   .floating-icons { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
   .floating-icon { position: absolute; font-size: 2em; opacity: 0.6; animation: floatUp 6s linear infinite; }
@@ -87,7 +103,10 @@
   <button onclick="checkPassword()">Enter</button>
 </div>
 
-<!-- OVERLAY -->
+<!-- SLIDE TRANSITION OVERLAY -->
+<div class="transition-overlay" id="transitionOverlay"></div>
+
+<!-- INTRO OVERLAY -->
 <div class="intro-overlay" id="intro">
   <div class="floating-icons" id="floatingIcons"></div>
   <span id="line1"></span>
@@ -144,133 +163,44 @@
 </audio>
 
 <script>
-/* PASSWORD + OVERLAY */
+/* PASSWORD + SLIDE TRANSITION */
 function checkPassword() {
   const pw = document.getElementById('pwInput');
-  if (pw.value==='1510'){
-    const gate=document.getElementById('passwordGate'); gate.style.opacity='0';
-    setTimeout(()=>{ gate.style.display='none'; showOverlay(); },800);
-  } else { pw.classList.add('wrong'); pw.value='Wrong'; setTimeout(()=>{pw.classList.remove('wrong'); pw.value='';},1000);}
-}
+  const gate = document.getElementById('passwordGate');
+  const transition = document.getElementById('transitionOverlay');
 
-let introClosing=false;
-function handleIntroClick(){ if(introClosing) return; introClosing=true; closeIntro(); }
+  if (pw.value === '1510') {
+    // Fade out password gate
+    gate.style.opacity = '0';
 
-function showOverlay(){
-  const overlay=document.getElementById('intro');
-  overlay.style.display='flex';
+    // After fade, show transition slide
+    setTimeout(() => {
+      gate.style.display = 'none';
+      transition.classList.add('active');
 
-  const line1=document.getElementById('line1');
-  const line2=document.getElementById('line2');
-  const clickText=document.getElementById('clickText');
-  const icons=["❤️","💫","🌙","💐","✨"];
-  const floatContainer=document.getElementById('floatingIcons');
+      // After slide-in, slide out to the right
+      setTimeout(() => {
+        transition.classList.add('leave');
 
-  function createIcon(){ const icon=document.createElement('div'); icon.className='floating-icon'; icon.textContent=icons[Math.floor(Math.random()*icons.length)]; icon.style.left=Math.random()*100+'%'; icon.style.bottom='-30px'; icon.style.animationDuration=4+Math.random()*3+'s'; floatContainer.appendChild(icon); setTimeout(()=>icon.remove(),7000);}
-  setInterval(createIcon,500);
-
-  setTimeout(()=>{ typeText("🎉❤️Happy Anniversary❤️🎉",line1,()=>{ typeText("October 2024 - October 2025",line2,()=>clickText.classList.add('visible')); });},2000);
-  overlay.addEventListener('click',handleIntroClick);
-}
-
-function typeText(text,el,callback){ let i=0; function typing(){ if(i<text.length){ el.textContent+=text.charAt(i); i++; setTimeout(typing,100);} else if(callback) callback(); } typing();}
-
-function closeIntro(){
-  const overlay=document.getElementById('intro');
-  overlay.style.transition='opacity 0.9s ease'; overlay.style.opacity=0;
-  document.body.style.backgroundColor='#0b0b1d';
-  document.getElementById('sky').style.opacity='1';
-  const music=document.getElementById('bg-music'); music.volume=0.7; music.play().catch(()=>{});
-  setTimeout(()=>overlay.style.display='none',900);
-}
-
-/* STAR + SHOOTING STAR + CLOUDS */
-const sky=document.getElementById('sky'); const moon=document.getElementById('moon');
-for(let i=0;i<150;i++){ const s=document.createElement('div'); s.className='star'; const size=Math.random()*2+1; s.style.width=size+'px'; s.style.height=size+'px'; s.style.top=Math.random()*100+'%'; s.style.left=Math.random()*100+'%'; s.style.animationDelay=Math.random()*3+'s'; sky.appendChild(s);}
-function createShootingStar(){ const s=document.createElement('div'); s.className='shooting-star'; s.style.top=Math.random()*40+'%'; s.style.left=Math.random()*60+'%'; sky.appendChild(s); setTimeout(()=>s.remove(),1800);}
-setInterval(()=>{ if(Math.random()<0.4) createShootingStar();},4000);
-for(let i=0;i<4;i++){ const cloud=document.createElement('div'); cloud.className='cloud'; cloud.style.width=200+Math.random()*250+'px'; cloud.style.height=100+Math.random()*60+'px'; cloud.style.top=20+Math.random()*50+'%'; cloud.style.animationDuration=80+Math.random()*40+'s'; sky.appendChild(cloud);}
-
-/* SECTION REVEAL + FOOTSTEPS + MOON SHRINK */
-let moonShrinkActive=false; let walked=false;
-const sections=document.querySelectorAll('section');
-window.addEventListener('scroll',()=>{
-  const trigger=window.innerHeight*0.8;
-  sections.forEach(sec=>{ if(sec.getBoundingClientRect().top<trigger){ sec.classList.add('visible'); if(sec.id==='section1') moonShrinkActive=true; }});
-  const timeline=document.getElementById('timeline-section'); if(timeline && timeline.getBoundingClientRect().top<trigger && !walked){ walked=true; walkFootsteps();}
-  if(moonShrinkActive){ const scrollY=window.scrollY; moon.style.transform=`scale(${Math.max(0.7,1-scrollY/2500)})`; moon.style.opacity=Math.max(0.5,1-scrollY/1800); }
-});
-
-function walkFootsteps(){
-  const left=document.getElementById('leftFoot'); const right=document.getElementById('rightFoot'); let steps=8; let pos=0;
-  function step(){ if(pos<steps){ let y=pos*90+20; if(pos%2===0){ left.style.opacity=1; left.style.top=y+'px'; left.style.left='47%'; } else { right.style.opacity=1; right.style.top=y+'px'; right.style.left='51%'; } pos++; setTimeout(step,500);} }
-  step();
-}
-
-/* LETTERS */
-function showLetter(id){ document.querySelectorAll('.letter').forEach(l=>l.style.display='none'); document.getElementById(id).style.display='block'; }
-
-/* HEART PUZZLE MINI GAME */
-function createHeartPuzzle() {
-  const container = document.getElementById('puzzle-container');
-  container.innerHTML = '';
-  
-  const heartPositions = [
-    {top:0, left:25}, {top:0, left:50},
-    {top:16.6, left:0}, {top:16.6, left:25}, {top:16.6, left:50}, {top:16.6, left:75},
-    {top:33.3, left:0}, {top:33.3, left:25}, {top:33.3, left:50}, {top:33.3, left:75},
-    {top:50, left:25}, {top:50, left:50}
-  ];
-
-  let shuffled = [...heartPositions].sort(()=>Math.random()-0.5);
-
-  heartPositions.forEach((pos, index)=>{
-    const piece = document.createElement('div');
-    piece.className = 'puzzle-piece';
-    piece.style.position='absolute';
-    piece.style.width='25%';
-    piece.style.height='33.3%';
-    piece.style.backgroundImage='url("WILL1.jpg")';
-    piece.style.backgroundSize='100% 100%';
-    piece.style.top = shuffled[index].top + '%';
-    piece.style.left = shuffled[index].left + '%';
-    piece.setAttribute('data-index', index);
-    container.appendChild(piece);
-
-    piece.addEventListener('click',()=>{
-      if(container.selected){
-        const other = container.selected;
-        const tempTop = piece.style.top;
-        const tempLeft = piece.style.left;
-        piece.style.top = other.style.top;
-        piece.style.left = other.style.left;
-        other.style.top = tempTop;
-        other.style.left = tempLeft;
-        container.selected.style.border = '';
-        container.selected = null;
-        checkWin();
-      } else {
-        container.selected = piece;
-        piece.style.border='2px solid yellow';
-      }
-    });
-  });
-
-  function checkWin(){
-    const pieces = container.querySelectorAll('.puzzle-piece');
-    let won = true;
-    pieces.forEach((p,i)=>{
-      if(p.style.top !== heartPositions[i].top+'%' || p.style.left !== heartPositions[i].left+'%'){
-        won=false;
-      }
-    });
-    if(won){
-      document.getElementById('puzzleMessage').textContent='🎉 You completed the heart puzzle! ❤️';
-    }
+        // After slide-out, remove and start intro
+        setTimeout(() => {
+          transition.style.display = 'none';
+          showOverlay();
+        }, 1200);
+      }, 1000);
+    }, 800);
+  } else {
+    pw.classList.add('wrong');
+    pw.value = 'Wrong';
+    setTimeout(() => { pw.classList.remove('wrong'); pw.value = ''; }, 1000);
   }
 }
 
-createHeartPuzzle();
-</script>
-</body>
-</html>
+let introClosing = false;
+function handleIntroClick() {
+  if (introClosing) return;
+  introClosing = true;
+  closeIntro();
+}
+
+function showOverl

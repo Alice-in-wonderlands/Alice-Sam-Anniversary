@@ -325,11 +325,105 @@
   0% { text-shadow: none; opacity: 0.6; }
   100% { text-shadow: 0 0 10px rgba(255,180,200,0.8); opacity: 1; }
 }
+
+/* 💞 Nâng cấp phần nội dung timeline */
+.milestone .text {
+  width: 280px; /* 👈 cùng kích thước với ảnh */
+  max-width: none;
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+  color: #f8f4f0;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 20px 25px;
+  border-radius: 18px;
+  box-shadow: 0 0 25px rgba(255, 200, 210, 0.08);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  transition: all 0.6s ease;
+}
+
+/* Khi hover vào phần text – nổi nhẹ lên, ánh hồng mơ */
+.milestone .text:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 35px rgba(255, 170, 200, 0.3);
+}
+
+/* 🌸 Tiêu đề ngày và sự kiện nổi bật, tinh tế hơn */
+.milestone .text h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5em;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #fff3f6;
+  text-shadow: 0 0 6px rgba(255, 180, 200, 0.4);
+  margin-bottom: 15px;
+}
+
+/* 💌 Nội dung mềm mại, nhẹ nhàng hơn */
+.milestone .text p {
+  font-size: 1.05em;
+  color: #f8f5f2;
+  line-height: 1.75;
+  font-style: italic;
+  text-align: justify;
+}
+
+/* 🎀 Dòng đầu tiên nhấn nhẹ hơn – tạo cảm giác mở câu */
+.milestone .text p::first-line {
+  font-weight: 600;
+  color: #ffe4ec;
+}
   
   .tab { display:inline-block; background-color:rgba(229,225,216,0.8); color:#3b2f2f; padding:10px 20px; margin:10px; border-radius:20px; cursor:pointer; transition:0.3s; }
   .tab:hover{ background-color:#d8d4c7; }
   .letter { display:none; margin:20px auto; max-width:500px; background-color:rgba(247,244,238,0.9); padding:20px; border-radius:15px; color:#3b2f2f; box-shadow:0 0 10px rgba(0,0,0,0.3); }
 
+ /* Nút play nằm giữa trái tim */
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 20px rgba(255, 150, 180, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  z-index: 10;
+}
+
+.play-btn:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 25px rgba(255, 170, 200, 0.8);
+}
+
+/* Biểu tượng tam giác trong nút play */
+.play-btn::before {
+  content: "▶";
+  color: #d6336c;
+  font-size: 2rem;
+  margin-left: 5px;
+}
+
+/* Ẩn các phần game ban đầu */
+#game-content {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+#game-content.visible {
+  opacity: 1;
+  pointer-events: auto;
+}  
   /* 🎯 Mini game trái tim */
   :root {
     --size: 450px;
@@ -407,8 +501,6 @@
   text-align: center;
 }
 
-
-
 .ending-scene.visible {
   opacity: 1;
 }
@@ -447,7 +539,51 @@ main.shifted {
   filter: blur(2px);
 }
 
-  
+  /* Nút play giữa tim */
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 20px rgba(255, 150, 180, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  z-index: 10;
+}
+.play-btn:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 25px rgba(255, 170, 200, 0.8);
+}
+.play-btn::before {
+  content: "▶";
+  color: #d6336c;
+  font-size: 2rem;
+  margin-left: 5px;
+}
+
+/* Ẩn game khi chưa bấm Play */
+#game-content {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+/* Khi hiện lên */
+#game-content.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
 </style>
 </head>
 <body>
@@ -585,17 +721,26 @@ main.shifted {
 <!-- ❤️ Mini Game -->
 <section>
   <h2>🧩Solving Problem💗</h2>
-  <p>Pull the pieces into the heart. Let's see if you can fullfil it!😘</p>
 
-  <div class="board-wrap" id="board"></div>
-  <div id="pieces"></div>
+  <!-- Tim + Play -->
+  <div class="heart-wrap" style="position:relative; width:450px; height:450px; margin:0 auto;">
+    <div class="board-wrap"></div> <!-- chỉ để tạo hình tim -->
+    <div class="play-btn" id="playBtn"></div>
+  </div>
 
-  <div style="margin-top:12px;">
-    <button id="shuffleBtn">🔀Shuffle</button>
-    <button id="resetBtn">♻️Again</button>
+  <!-- Game nội dung, tách hẳn ra -->
+  <div id="game-content">
+    <p>Pull the pieces into the heart. Let's see if you can fulfill it! 😘</p>
+    <div class="board-wrap" id="board"></div>
+    <div id="pieces"></div>
+    <div style="margin-top:12px;">
+      <button id="shuffleBtn">🔀Shuffle</button>
+      <button id="resetBtn">♻️Again</button>
+    </div>
   </div>
 </section>
-  </main>
+
+</main>
     
 <audio id="bg-music" loop>
   <source src="mylove.mp3" type="audio/mpeg">
@@ -707,197 +852,39 @@ window.addEventListener("scroll", () => {
 
 
 /* ========== MINI GAME ========== */
-const board = document.getElementById("board");
-const piecesContainer = document.getElementById("pieces");
-const gridSize = 3;
-const boardSize = 450;
-const cellSize = boardSize / gridSize;
 
-function createSlots() {
-  board.innerHTML = "";
-  for (let i = 0; i < gridSize * gridSize; i++) {
-    const slot = document.createElement("div");
-    slot.className = "slot";
-    slot.dataset.index = i;
-    slot.addEventListener("dragover", (e) => { e.preventDefault(); slot.classList.add("highlight"); });
-    slot.addEventListener("dragleave", () => slot.classList.remove("highlight"));
-    slot.addEventListener("drop", handleDrop);
-    board.appendChild(slot);
-  }
-}
+// 🎬 Khi bấm nút Play -> Hiện game
+<script>
+document.getElementById("playBtn").addEventListener("click", () => {
+  const playBtn = document.getElementById("playBtn");
+  const gameContent = document.getElementById("game-content");
+  const heartWrap = playBtn.closest('.heart-wrap'); // khung trái tim trang trí
 
-function createPieces(shuffle = true) {
-  piecesContainer.innerHTML = "";
-  const positions = [];
-  for (let r = 0; r < gridSize; r++) {
-    for (let c = 0; c < gridSize; c++) {
-      positions.push({ r, c, idx: r * gridSize + c });
-    }
-  }
-  if (shuffle) {
-    for (let i = positions.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [positions[i], positions[j]] = [positions[j], positions[i]];
-    }
-  }
-  positions.forEach((pos, i) => {
-    const piece = document.createElement("div");
-    piece.className = "piece";
-    piece.id = "p-" + i;
-    piece.style.backgroundPosition = `-${pos.c * cellSize}px -${pos.r * cellSize}px`;
-    piece.dataset.correctIndex = pos.idx;
-    piece.draggable = true;
-    piece.addEventListener("dragstart", (e) => {
-      e.dataTransfer.setData("text/plain", piece.id);
-      e.dataTransfer.effectAllowed = "move";
-    });
-    piecesContainer.appendChild(piece);
-  });
-}
+  // 1) Ẩn nút Play
+  playBtn.style.opacity = "0";
+  playBtn.style.pointerEvents = "none";
+  setTimeout(() => playBtn.style.display = "none", 600);
 
-function handleDrop(e) {
-  e.preventDefault();
-  this.classList.remove("highlight");
-  const pieceId = e.dataTransfer.getData("text/plain");
-  const dragged = document.getElementById(pieceId);
-  if (!dragged) return;
-  if (this.querySelector(".piece")) return;
-  this.appendChild(dragged);
-  checkWin();
-}
-
-  function checkWin() {
-  const slots = document.querySelectorAll(".slot");
-  let filled = 0, correct = 0;
-  slots.forEach((slot, i) => {
-    const piece = slot.querySelector(".piece");
-    if (piece) {
-      filled++;
-      if (parseInt(piece.dataset.correctIndex) === i) correct++;
-    }
-  });
-
-  // Khi đủ 9 mảnh và đúng hết
-  if (filled === 9 && correct === 9) {
-    showFireworks();
-    setTimeout(showReward, 1000); // 🎉 xuất hiện ảnh thưởng sau 1s
-  }
-}
-
-  
-/* 🎆 Hiệu ứng pháo hoa */
-function showFireworks() {
-  const fireContainer = document.createElement("div");
-  fireContainer.id = "fireworks";
-  fireContainer.style.position = "fixed";
-  fireContainer.style.inset = "0";
-  fireContainer.style.zIndex = "9999";
-  fireContainer.style.pointerEvents = "none";
-  document.body.appendChild(fireContainer);
-
-  for (let i = 0; i < 25; i++) {
-    const spark = document.createElement("div");
-    spark.className = "spark";
-    spark.style.position = "absolute";
-    spark.style.width = "6px";
-    spark.style.height = "6px";
-    spark.style.borderRadius = "50%";
-    spark.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
-    spark.style.top = Math.random() * 100 + "%";
-    spark.style.left = Math.random() * 100 + "%";
-    spark.style.animation = "burst 1s ease-out forwards";
-    fireContainer.appendChild(spark);
+  // 2) Ẩn luôn khung trang trí (nếu muốn thay bằng game)
+  if (heartWrap) {
+    heartWrap.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+    heartWrap.style.opacity = "0";
+    heartWrap.style.transform = "scale(0.96)";
+    setTimeout(() => {
+      heartWrap.style.display = "none";
+    }, 420);
   }
 
+  // ❌ Xóa đoạn move game (vì nó gây mất mảnh)
+  // Không di chuyển gameContent nữa — giữ nguyên chỗ cũ
+
+  // 3) Hiện game sau khi hiệu ứng xong
   setTimeout(() => {
-    fireContainer.remove();
-  }, 1800);
-}
-
-/* 🖼️ Hiện ảnh phần thưởng + kết */
-function showReward() {
-  const reward = document.createElement("div");
-  reward.id = "reward";
-  reward.style.position = "fixed";
-  reward.style.inset = "0";
-  reward.style.display = "flex";
-  reward.style.alignItems = "center";
-  reward.style.justifyContent = "center";
-  reward.style.background = "rgba(0,0,0,0.7)";
-  reward.style.zIndex = "10000";
-
-  reward.innerHTML = `
-    <div style="text-align:center;">
-      <h2 style="color:#fff;font-size:2em;margin-bottom:15px;">🎉 You Completed Us! 🎉</h2>
-      <img src="anni.jpg" alt="Reward" style="width:400px;border-radius:20px;box-shadow:0 0 25px rgba(255,255,255,0.5);">
-      <p style="color:#fce4ec;margin-top:10px;">Happy Anniversary, my love 💖</p>
-      <button id="closeRewardBtn" style="margin-top:15px;padding:10px 25px;border:none;border-radius:10px;background:#ff6f91;color:white;cursor:pointer;font-size:1rem;">Close 💫</button>
-    </div>
-  `;
-  document.body.appendChild(reward);
-
-  // Khi bấm Close -> Hiện kết
-  document.getElementById("closeRewardBtn").onclick = () => {
-    reward.remove();
-    document.querySelector("main").classList.add("shifted");
-
-
-    // Hiệu ứng nền kết nhẹ
-    document.body.style.transition = "background-color 3s ease";
-    document.body.style.backgroundColor = "#2b0a18";
-
-    // Hiện màn kết
-    const endScene = document.createElement("div");
-    endScene.className = "ending-scene";
-    endScene.innerHTML = `
-      <div class="ending-text">
-        <h2>To be continued…</h2>
-        <p>This is just our first chapter.<br>I can’t wait to write the rest with you. ❤️</p>
-      </div>
-    `;
-    document.body.appendChild(endScene);
-    setTimeout(() => endScene.classList.add("visible"), 100);
-  };
-}
-
-
-document.getElementById("shuffleBtn").addEventListener("click", () => createPieces(true));
-document.getElementById("resetBtn").addEventListener("click", () => { createSlots(); createPieces(false); });
-
-createSlots();
-createPieces(true);
-  
-// ✨ Cho phép double click để ẩn "To be continued..." và hiện lại main
-document.addEventListener("DOMContentLoaded", () => {
-  const observer = new MutationObserver(() => {
-    const endingScene = document.querySelector(".ending-scene");
-    const main = document.querySelector("main");
-    if (endingScene && !endingScene.dataset.bound) {
-      endingScene.dataset.bound = "true";
-      endingScene.addEventListener("dblclick", () => {
-        // 1️⃣ Làm mờ dần phần "To be continued..."
-        endingScene.style.transition = "opacity 1s ease";
-        endingScene.style.opacity = "0";
-
-        // 2️⃣ Hiện lại main sau khi "to be continued" biến mất
-        setTimeout(() => {
-          endingScene.style.display = "none";
-
-          // Gỡ hiệu ứng blur / opacity giảm của main (nếu có)
-          if (main) {
-            main.classList.remove("shifted"); // hoặc "blurred" nếu bạn dùng class đó
-            main.style.filter = "none";
-            main.style.opacity = "1";
-            main.style.transform = "translateY(0)";
-          }
-        }, 1000);
-      });
-    }
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
+    gameContent.classList.add("visible");
+    gameContent.style.marginTop = "20px";
+  }, 400);
 });
-
 </script>
+
 </body>
 </html>
